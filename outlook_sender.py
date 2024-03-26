@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import *
 from tkinter import ttk, filedialog, messagebox
 import pandas as pd
 import smtplib
@@ -67,49 +68,50 @@ def send_mass_emails():
 
 # Create main application window
 window = tk.Tk()
-window.title("Mass Email Sender")
-window.geometry("500x500")
+frame = tk.Frame(window)
+frame2 = tk.Frame(window, borderwidth=100)
+
+frame2.pack(side=BOTTOM, fill=X)
+w = 800 
+h = 650 
+
+ws = window.winfo_screenwidth() # width of the screen
+hs = window.winfo_screenheight() # height of the screen
+
+# calculate x and y coordinates for the Tk root window
+x = (ws/2) - (w/2)
+y = (hs/2) - (h/2)
+
+# set the dimensions of the screen and where it is placed
+window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+window.columnconfigure(0, weight=1)
 
 # Create labels and input fields
-from_email_label = ttk.Label(window, text="From Email:")
-from_email_label.grid(row=0, column=0, padx=10, pady=5, sticky="w")
-from_email_entry = ttk.Entry(window)
-from_email_entry.grid(row=0, column=1, padx=10, pady=5)
+from_email_label = ttk.Label(frame, text="From Email:", justify="left").grid(row=0, column=0, padx=10, pady=5)
+from_email_entry = ttk.Entry(frame , justify="left").grid(row=0, column=1, padx=10, pady=5,)
 
-password_label = ttk.Label(window, text="Password:")
-password_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
-password_entry = ttk.Entry(window, show="*")
-password_entry.grid(row=1, column=1, padx=10, pady=5)
+password_label = ttk.Label(frame, text="Password:", justify="left").grid(row=1, column=0, padx=10, pady=5)
+password_entry = ttk.Entry(frame, show="*", justify="left").grid(row=1, column=1, padx=10, pady=5)
 
-subject_label = ttk.Label(window, text="Subject:")
-subject_label.grid(row=2, column=0, padx=10, pady=5, sticky="w")
-subject_entry = ttk.Entry(window)
-subject_entry.grid(row=2, column=1, padx=10, pady=5)
+subject_label = ttk.Label(frame, text="Subject:", justify="left").grid(row=2, column=0, padx=10, pady=5)
+subject_entry = ttk.Entry(frame , justify="left").grid(row=2, column=1, padx=10, pady=5)
 
-body_label = ttk.Label(window, text="Body:")
-body_label.grid(row=3, column=0, padx=10, pady=5, sticky="w")
-body_text = tk.Text(window, height=5, width=30)
-body_text.grid(row=3, column=1, padx=10, pady=5)
+body_label = ttk.Label(frame, text="Body:", justify="left").grid(row=3, column=0, padx=10, pady=5)
+body_text = tk.Text(frame, height=5, width=20).grid(row=3, column=1, padx=10, pady=5)
 
-attachment_label = ttk.Label(window, text="Attachment:")
-attachment_label.grid(row=4, column=0, padx=10, pady=5, sticky="w")
-attachment_entry = ttk.Entry(window)
-attachment_entry.grid(row=4, column=1, padx=10, pady=5)
+attachment_label = ttk.Label(frame, text="Attachment:").grid(row=4, column=0, padx=10, pady=5)
+attachment_entry = ttk.Entry(frame).grid(row=4, column=1, padx=10, pady=5)
 
-recipient_label = ttk.Label(window, text="Recipient File:")
-recipient_label.grid(row=5, column=0, padx=10, pady=5, sticky="w")
-recipients_entry = ttk.Entry(window)
-recipients_entry.grid(row=5, column=1, padx=10, pady=5)
+recipient_label = ttk.Label(frame, text="Recipient File:").grid(row=5, column=0, padx=10, pady=5)
+recipients_entry = ttk.Entry(frame).grid(row=5, column=1, padx=10, pady=5)
 
-from_row_label = ttk.Label(window, text="From Row:")
-from_row_label.grid(row=6, column=0, padx=10, pady=5, sticky="w")
-from_row_entry = ttk.Entry(window)
-from_row_entry.grid(row=6, column=1, padx=10, pady=5)
+from_row_label = ttk.Label(frame, text="From Row:").grid(row=6, column=0, padx=10, pady=5)
+from_row_entry = ttk.Entry(frame).grid(row=6, column=1, padx=10, pady=5)
 
-to_row_label = ttk.Label(window, text="To Row:")
-to_row_label.grid(row=7, column=0, padx=10, pady=5, sticky="w")
-to_row_entry = ttk.Entry(window)
-to_row_entry.grid(row=7, column=1, padx=10, pady=5)
+to_row_label = ttk.Label(frame, text="To Row:").grid(row=7, column=0, padx=10, pady=5)
+to_row_entry = ttk.Entry(frame).grid(row=7, column=1, padx=10, pady=5)
+
+frame.pack()
 
 # Function to browse and attach file
 def attach_file():
@@ -117,8 +119,8 @@ def attach_file():
     attachment_entry.delete(0, tk.END)
     attachment_entry.insert(0, file_path)
 
-attach_button = ttk.Button(window, text="Attach File", command=attach_file)
-attach_button.grid(row=4, column=2, padx=5, pady=5)
+attach_button = ttk.Button(frame, text="Attach File", command=attach_file)
+attach_button.grid(row=4, column=2, columnspan=30, padx=5, pady=5, sticky="ew")
 
 # Function to browse and attach recipient file
 def attach_recipient_file():
@@ -126,17 +128,14 @@ def attach_recipient_file():
     recipients_entry.delete(0, tk.END)
     recipients_entry.insert(0, file_path)
 
-recipient_button = ttk.Button(window, text="Attach Recipient File", command=attach_recipient_file)
-recipient_button.grid(row=5, column=2, padx=5, pady=5)
+recipient_button = ttk.Button(frame, text="Attach Recipient File", command=attach_recipient_file).grid(row=5, column=2, padx=5, pady=5)
 
 # Function to send mass emails
-send_button = ttk.Button(window, text="Send", command=send_mass_emails)
-send_button.grid(row=8, column=1, padx=10, pady=5)
+send_button = ttk.Button(frame, text="Send", command=send_mass_emails).grid(row=8, column=1, padx=10, pady=5)
 
 # Print designed by Aparimit Singhal
-designed_by_label = ttk.Label(window, text="Designed by Aparimit Singhal (R) 2024 All rights reserved", anchor="w")
-designed_by_label.grid(row=9, column=0, columnspan=3, sticky="sw", padx=10)
-
+label1 = Label(frame2, text="Designed by Aparimit Singhal (R) 2024 All rights reserved", fg="black",
+               bd=1, relief=SUNKEN, pady=10,padx=20)
+label1.pack(side=BOTTOM, fill=X)
 # Start the application
 window.mainloop()
-
